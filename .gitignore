@@ -1,0 +1,25 @@
+# Ignore the IDE-specific directory
+.idea/
+
+# Ignore build output directories
+out/
+META-INF/
+
+# Ignore compiled class files
+*.class
+
+# Ignore JAR files
+*.jar
+
+# Ignore log files
+*.log
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore Maven and Gradle files (if using)
+*.iml
+*.gradle
+.gradle/
+build/

@@ -3,6 +3,7 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Author: Thant Htoo Aung
@@ -100,9 +101,20 @@ public class AddSongsPage {
             String filePaths = filePathField.getText();
             String songName = songNameField.getText();
             if (!filePaths.isEmpty() && !songName.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Song '" + songName + "' imported: " + filePaths);
-                frame.dispose();
-                new HomePage().show();
+                try {
+                    boolean isAvailable = InternetAvailabilityChecker.isInternetAvailable();
+                    if (isAvailable) {
+                        JOptionPane.showMessageDialog(frame, "Song '" + songName + "' imported: " + filePaths);
+                        frame.dispose();
+                        new HomePage().show();
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "No internet connection. Please check your connection and try again.",
+                                "Connection Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(frame, "Unable to check internet connection. Please try again later.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 JOptionPane.showMessageDialog(frame, "Please select a file and enter a song name.");
             }

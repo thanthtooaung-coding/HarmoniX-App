@@ -10,8 +10,8 @@ import java.io.File;
  * Version: 1.0
  *
  * Description: The {@code GUI.AddSongsPage} class represents a frame for adding
- * songs to the music player. It provides a file input and an import button to
- * select and import song files into the application.
+ * songs to the music player. It provides a file input, song name input, and an
+ * import button to select and import song files into the application.
  *
  * License: MIT License
  */
@@ -34,7 +34,7 @@ public class AddSongsPage {
         frame.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(15, 15, 15, 15);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // File chooser label
@@ -43,26 +43,47 @@ public class AddSongsPage {
         gbc.gridy = 0;
         frame.add(fileLabel, gbc);
 
-        // File chooser
+        // File chooser text field
         JTextField filePathField = new JTextField(20);
         gbc.gridx = 1;
         frame.add(filePathField, gbc);
 
+        // Browse button
         JButton browseButton = new JButton("Browse");
         gbc.gridx = 2;
         frame.add(browseButton, gbc);
 
+        // Song name label
+        JLabel songNameLabel = new JLabel("Song Name:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        frame.add(songNameLabel, gbc);
+
+        // Song name text field
+        JTextField songNameField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        frame.add(songNameField, gbc);
+
         // Import button
         JButton importButton = new JButton("Import");
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.gridwidth = 3;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
         frame.add(importButton, gbc);
 
         // Browse button action listener
         browseButton.addActionListener(_ -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setMultiSelectionEnabled(true);
+            fileChooser.setFileFilter(new FileNameExtensionFilter());
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+            fileChooser.setDialogTitle("Choose song file");
+            fileChooser.setAcceptAllFileFilterUsed(false);
             int returnValue = fileChooser.showOpenDialog(frame);
             if (returnValue == JFileChooser.APPROVE_OPTION) {
                 File[] selectedFiles = fileChooser.getSelectedFiles();
@@ -76,13 +97,14 @@ public class AddSongsPage {
 
         // Import button action listener
         importButton.addActionListener(_ -> {
-            String paths = filePathField.getText();
-            if (!paths.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Songs imported: " + paths);
+            String filePaths = filePathField.getText();
+            String songName = songNameField.getText();
+            if (!filePaths.isEmpty() && !songName.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Song '" + songName + "' imported: " + filePaths);
                 frame.dispose();
                 new HomePage().show();
             } else {
-                JOptionPane.showMessageDialog(frame, "Please select at least one song file.");
+                JOptionPane.showMessageDialog(frame, "Please select a file and enter a song name.");
             }
         });
     }

@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Author: Thant Htoo Aung
@@ -104,9 +108,18 @@ public class AddSongsPage {
                 try {
                     boolean isAvailable = InternetAvailabilityChecker.isInternetAvailable();
                     if (isAvailable) {
-                        JOptionPane.showMessageDialog(frame, "Song '" + songName + "' imported: " + filePaths);
-                        frame.dispose();
-                        new HomePage().show();
+                        String[] paths = filePaths.split("; ");
+                        boolean success = FileCopyHandler.copyFilesToDirectory(paths);
+
+                        if (success) {
+                            JOptionPane.showMessageDialog(frame, "Song '" + songName + "' imported: " + filePaths);
+                            frame.dispose();
+                            new HomePage().show();
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Some files failed to copy.",
+                                    "Copy Error", JOptionPane.ERROR_MESSAGE);
+                        }
+
                     } else {
                         JOptionPane.showMessageDialog(frame, "No internet connection. Please check your connection and try again.",
                                 "Connection Error", JOptionPane.ERROR_MESSAGE);
